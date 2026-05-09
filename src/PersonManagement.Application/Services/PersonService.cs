@@ -90,6 +90,7 @@ public class PersonService : IPersonService
         if (person is null)
             return ApiResponseDto<bool>.Fail("Pessoa não encontrada.");
 
+        _addressRepository.Delete(person.Address);
         _personRepository.Delete(person);
         await _unitOfWork.CommitAsync();
 

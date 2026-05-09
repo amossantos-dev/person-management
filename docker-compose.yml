@@ -11,5 +11,25 @@ services:
     volumes:
       - sqlserver_data:/var/lib/mssql/data
 
+  api:
+    build:
+      context: .
+      dockerfile: src/PersonManagement.Api/Dockerfile
+    ports:
+      - "5045:8080"
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=PersonManagement;User Id=sa;Password=Admin@123456;TrustServerCertificate=True"
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
+
 volumes:
   sqlserver_data:
