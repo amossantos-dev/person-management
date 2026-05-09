@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PersonManagement.Api/PersonManagement.Api.csproj" />
+    <Project Path="src/PersonManagement.Application/PersonManagement.Application.csproj" />
+    <Project Path="src/PersonManagement.Domain/PersonManagement.Domain.csproj" />
+    <Project Path="src/PersonManagement.Infrastructure/PersonManagement.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PersonManagement.IntegrationTests/PersonManagement.IntegrationTests.csproj" />
+    <Project Path="tests/PersonManagement.UnitTests/PersonManagement.UnitTests.csproj" />
+  </Folder>
+</Solution>
