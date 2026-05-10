@@ -21,6 +21,7 @@ export function useAddressForm() {
   const lastFetchedCep = useRef('')
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!isBrazil) { setStates([]); setCities([]); return }
     setLoadingStates(true)
     fetchStates()
@@ -29,6 +30,7 @@ export function useAddressForm() {
   }, [isBrazil])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!isBrazil || !state) { setCities([]); return }
     setLoadingCities(true)
     fetchCities(state)

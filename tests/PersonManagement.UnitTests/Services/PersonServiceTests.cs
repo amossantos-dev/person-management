@@ -45,7 +45,7 @@ public class PersonServiceTests
 
     private static Person ValidPerson()
     {
-        var address = new PersonAddress("Rua Teste", "123", null, "Centro", "São Paulo", "SP", "BR");
+        var address = new PersonAddress(null, "Rua Teste", "123", null, "Centro", "São Paulo", "SP", "BR");
         return new Person("João Silva", new DateTime(1990, 1, 1), address);
     }
 
