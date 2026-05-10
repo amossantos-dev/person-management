@@ -29,6 +29,7 @@ Aplicação full-stack para gerenciamento de pessoas e endereços, construída c
 **Infraestrutura**
 
 - Docker + Docker Compose
+- GitHub Actions (CI)
 
 ---
 
@@ -156,6 +157,23 @@ dotnet test tests/PersonManagement.IntegrationTests
 Usam `WebApplicationFactory` + `Testcontainers` com SQL Server real. Cobrem todos os endpoints: autenticação, CRUD de pessoas, paginação e proteção de rotas.
 
 > Requer Docker em execução para os testes integrados (Testcontainers sobe o container automaticamente).
+
+---
+
+## CI (Integração Contínua)
+
+O projeto utiliza **GitHub Actions** com pipeline automático em todo push ou Pull Request para a branch `main`.
+
+**Jobs executados em paralelo:**
+
+| Job | Etapas |
+|-----|--------|
+| Backend | `dotnet restore` → `dotnet build` → unitários → integrados |
+| Frontend | `npm ci` → `eslint` → `vite build` |
+
+O workflow está em [.github/workflows/ci.yml](.github/workflows/ci.yml).
+
+> Os testes de integração usam Testcontainers — o runner do GitHub Actions já vem com Docker, nenhuma configuração adicional é necessária.
 
 ---
 
@@ -307,7 +325,6 @@ Status HTTP utilizados: `200`, `400`, `401`, `404`, `500`.
 - Paginação com cursor em vez de offset para grandes volumes de dados
 - Cache com Redis para consultas frequentes
 - Testes de carga com k6 ou NBomber
-- CI/CD com GitHub Actions
 - Cobertura de código com relatório automático
 - Soft delete em vez de exclusão permanente
 - Auditoria de alterações com timestamps de criação e atualização
