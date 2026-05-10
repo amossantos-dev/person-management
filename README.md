@@ -294,3 +294,14 @@ Status HTTP utilizados: `200`, `400`, `401`, `404`, `500`.
 - **Testcontainers**: os testes integrados sobem um container SQL Server real, garantindo que as queries EF funcionam contra o banco de produção (não mocks).
 - **Serilog**: logs estruturados em formato JSON-friendly, facilmente extensível para sinks como Seq ou Elasticsearch.
 - **CORS configurável**: origens permitidas ficam no `appsettings.json` para serem ajustadas por ambiente sem recompilar.
+
+## Possíveis melhorias futuras
+
+- Refresh token para renovação automática do JWT
+- Paginação com cursor em vez de offset para grandes volumes de dados
+- Cache com Redis para consultas frequentes
+- Testes de carga com k6 ou NBomber
+- CI/CD com GitHub Actions
+- Cobertura de código com relatório automático
+- Soft delete em vez de exclusão permanente
+- Auditoria de alterações com timestamps de criação e atualização
