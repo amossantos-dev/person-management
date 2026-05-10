@@ -7,6 +7,7 @@ Aplicação full-stack para gerenciamento de pessoas e endereços, construída c
 ## Tecnologias
 
 **Backend**
+
 - .NET 10 / ASP.NET Core
 - Entity Framework Core 10 + SQL Server
 - JWT Authentication
@@ -17,6 +18,7 @@ Aplicação full-stack para gerenciamento de pessoas e endereços, construída c
 - xUnit + Testcontainers
 
 **Frontend**
+
 - React 19 + TypeScript
 - Vite
 - React Router v7
@@ -25,6 +27,7 @@ Aplicação full-stack para gerenciamento de pessoas e endereços, construída c
 - Zod + react-hook-form
 
 **Infraestrutura**
+
 - Docker + Docker Compose
 
 ---
@@ -63,11 +66,13 @@ docker-compose up --build
 ```
 
 Isso sobe três serviços:
+
 - **sqlserver** — SQL Server 2022 na porta `1433`
 - **api** — API na porta `5045` (internamente `8080`)
 - **frontend** — nginx servindo o React na porta `3000`
 
 Acesse:
+
 - Frontend: http://localhost:3000
 - Swagger: http://localhost:5045/swagger
 
@@ -265,11 +270,13 @@ Authorization: Bearer <token>
 Todas as respostas seguem o mesmo envelope:
 
 **Sucesso:**
+
 ```json
 { "success": true, "data": {}, "message": "..." }
 ```
 
 **Erro:**
+
 ```json
 { "success": false, "errors": ["mensagem de erro"] }
 ```
@@ -287,16 +294,3 @@ Status HTTP utilizados: `200`, `400`, `401`, `404`, `500`.
 - **Testcontainers**: os testes integrados sobem um container SQL Server real, garantindo que as queries EF funcionam contra o banco de produção (não mocks).
 - **Serilog**: logs estruturados em formato JSON-friendly, facilmente extensível para sinks como Seq ou Elasticsearch.
 - **CORS configurável**: origens permitidas ficam no `appsettings.json` para serem ajustadas por ambiente sem recompilar.
-
----
-
-## Melhorias futuras
-
-- Autenticação com usuários reais armazenados no banco (com hash de senha)
-- Refresh token
-- Paginação com cursor ao invés de offset (mais eficiente para grandes volumes)
-- Health check endpoint
-- Sinks adicionais no Serilog (Seq, Application Insights)
-- CI/CD pipeline (GitHub Actions)
-- Cache de respostas para o endpoint de listagem
-- Cobertura de testes com relatório de coverage
