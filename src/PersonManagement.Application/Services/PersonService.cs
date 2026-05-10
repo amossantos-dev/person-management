@@ -42,6 +42,7 @@ public class PersonService : IPersonService
             dto.Address.Street,
             dto.Address.Number,
             dto.Address.Complement,
+            dto.Address.Neighborhood,
             dto.Address.City,
             dto.Address.State,
             dto.Address.Country);
@@ -72,6 +73,7 @@ public class PersonService : IPersonService
             dto.Address.Street,
             dto.Address.Number,
             dto.Address.Complement,
+            dto.Address.Neighborhood,
             dto.Address.City,
             dto.Address.State,
             dto.Address.Country);
@@ -120,5 +122,16 @@ public class PersonService : IPersonService
         };
 
         return ApiResponseDto<PagedResultDto<PersonResponseDto>>.Ok(result, "Consulta realizada com sucesso.");
+    }
+
+    public async Task<ApiResponseDto<bool>> DeleteManyAsync(DeleteManyPersonsRequestDto dto)
+    {
+        if (!dto.Ids.Any())
+            return ApiResponseDto<bool>.Fail("Nenhum ID informado.");
+
+        await _personRepository.DeleteManyAsync(dto.Ids);
+        await _unitOfWork.CommitAsync();
+
+        return ApiResponseDto<bool>.Ok(true, "Pessoas deletadas com sucesso.");
     }
 }

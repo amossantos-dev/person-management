@@ -56,4 +56,11 @@ public class PersonsController : ControllerBase
         var result = await _personService.GetPagedAsync(page, pageSize, search);
         return Ok(result);
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteMany([FromBody] DeleteManyPersonsRequestDto dto)
+    {
+        var result = await _personService.DeleteManyAsync(dto);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
 }

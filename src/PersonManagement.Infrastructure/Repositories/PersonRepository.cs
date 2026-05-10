@@ -53,4 +53,17 @@ public class PersonRepository : IPersonRepository
 
     public void Delete(Person person)
         => _context.Persons.Remove(person);
+
+    public async Task DeleteManyAsync(IEnumerable<Guid> ids)
+    {
+        var persons = await _context.Persons
+               .Include(p => p.Address)
+               .Where(p => ids.Contains(p.Id))
+               .ToListAsync();
+
+        var addresses = persons.Select(p => p.Address).ToList();
+
+        _context.Persons.RemoveRange(persons);
+        _context.PersonAddresses.RemoveRange(addresses);
+    }
 }

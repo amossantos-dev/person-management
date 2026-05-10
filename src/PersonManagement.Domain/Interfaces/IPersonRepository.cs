@@ -9,4 +9,5 @@ public interface IPersonRepository
     Task AddAsync(Person person);
     void Update(Person person);
     void Delete(Person person);
+    Task DeleteManyAsync(IEnumerable<Guid> ids);
 }
