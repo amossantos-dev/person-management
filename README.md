@@ -84,10 +84,16 @@ Acesse:
 
 ### 1. SQL Server com Docker
 
+**Bash / Git Bash / WSL:**
 ```bash
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Admin@123456" \
   -p 1433:1433 --name sqlserver \
   -d mcr.microsoft.com/mssql/server:2022-latest
+```
+
+**PowerShell:**
+```powershell
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Admin@123456" -p 1433:1433 --name sqlserver -d mcr.microsoft.com/mssql/server:2022-latest
 ```
 
 ### 2. Configurar a connection string
@@ -131,11 +137,12 @@ O frontend estará disponível em `http://localhost:5173`.
 
 ## Testes
 
+> Execute os comandos abaixo a partir da raiz do projeto.
+
 ### Unitários
 
 ```bash
-cd tests/PersonManagement.UnitTests
-dotnet test
+dotnet test tests/PersonManagement.UnitTests
 ```
 
 Cobrem: validators (FluentValidation), `PersonService` (criar, atualizar, deletar, buscar, paginar) e `AuthController` (login correto e incorreto).
@@ -143,8 +150,7 @@ Cobrem: validators (FluentValidation), `PersonService` (criar, atualizar, deleta
 ### Integrados
 
 ```bash
-cd tests/PersonManagement.IntegrationTests
-dotnet test
+dotnet test tests/PersonManagement.IntegrationTests
 ```
 
 Usam `WebApplicationFactory` + `Testcontainers` com SQL Server real. Cobrem todos os endpoints: autenticação, CRUD de pessoas, paginação e proteção de rotas.

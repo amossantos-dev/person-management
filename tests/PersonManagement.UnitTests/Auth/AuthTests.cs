@@ -48,12 +48,12 @@ public class AuthTests
     }
 
     [Fact]
-    public void Login_should_return_ok_with_valid_credentials()
+    public async Task Login_should_return_ok_with_valid_credentials()
     {
-        var controller = new AuthController(BuildConfiguration());
+        var controller = new AuthController(BuildConfiguration(), _validator);
         var dto = new LoginRequestDto { Username = "admin", Password = "admin" };
 
-        var result = controller.Login(dto);
+        var result = await controller.Login(dto);
 
         var ok = result.Should().BeOfType<OkObjectResult>().Subject;
         var response = ok.Value.Should().BeOfType<ApiResponseDto<LoginResponseDto>>().Subject;
@@ -61,12 +61,12 @@ public class AuthTests
     }
 
     [Fact]
-    public void Login_should_return_unauthorized_with_invalid_credentials()
+    public async Task Login_should_return_unauthorized_with_invalid_credentials()
     {
-        var controller = new AuthController(BuildConfiguration());
+        var controller = new AuthController(BuildConfiguration(), _validator);
         var dto = new LoginRequestDto { Username = "wrong", Password = "wrong" };
 
-        var result = controller.Login(dto);
+        var result = await controller.Login(dto);
 
         result.Should().BeOfType<UnauthorizedObjectResult>();
     }

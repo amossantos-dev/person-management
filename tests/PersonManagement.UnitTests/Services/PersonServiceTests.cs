@@ -141,6 +141,33 @@ public class PersonServiceTests
     }
 
     [Fact]
+    public async Task UpdateAsync_should_return_success_when_person_exists()
+    {
+        var person = ValidPerson();
+        _personRepoMock.Setup(r => r.GetByIdAsync(person.Id)).ReturnsAsync(person);
+
+        var service = CreateService();
+        var result = await service.UpdateAsync(person.Id, new UpdatePersonRequestDto
+        {
+            Name = "Nome Atualizado",
+            DateOfBirth = new DateTime(1990, 1, 1),
+            Address = new PersonAddressDto
+            {
+                Street = "Rua Nova",
+                Number = "456",
+                Neighborhood = "Centro",
+                City = "Rio de Janeiro",
+                State = "RJ",
+                Country = "Brazil"
+            }
+        });
+
+        result.Success.Should().BeTrue();
+        result.Data!.Name.Should().Be("Nome Atualizado");
+        _unitOfWorkMock.Verify(u => u.CommitAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task UpdateAsync_should_fail_when_person_not_found()
     {
         _personRepoMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Person?)null);
