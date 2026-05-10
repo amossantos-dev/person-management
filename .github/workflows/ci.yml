@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend - Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore PersonManagement.slnx
+
+      - name: Build
+        run: dotnet build PersonManagement.slnx --no-restore --configuration Release
+
+      - name: Unit Tests
+        run: dotnet test tests/PersonManagement.UnitTests --no-build --configuration Release --verbosity normal
+
+      - name: Integration Tests
+        run: dotnet test tests/PersonManagement.IntegrationTests --no-build --configuration Release --verbosity normal
+
+  frontend:
+    name: Frontend - Build & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
