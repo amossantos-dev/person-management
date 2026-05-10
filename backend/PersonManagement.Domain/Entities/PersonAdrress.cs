@@ -5,15 +5,15 @@ public class PersonAddress
     public Guid Id { get; private set; }
     public string Street { get; private set; } = null!;
     public string Number { get; private set; } = null!;
-    public string? Complement { get; private set; } = null!;
-    public string? Neighborhood { get; private set; }
+    public string? Complement { get; private set; }
+    public string Neighborhood { get; private set; } = null!;
     public string City { get; private set; } = null!;
     public string State { get; private set; } = null!;
     public string Country { get; private set; } = null!;
 
     protected PersonAddress() { }
 
-    public PersonAddress(string street, string number, string? complement, string? neighborhood, string city, string state, string country)
+    public PersonAddress(string street, string number, string? complement, string neighborhood, string city, string state, string country)
     {
         Id = Guid.NewGuid();
         Street = street;
@@ -25,7 +25,7 @@ public class PersonAddress
         Country = country;
     }
 
-    public void Update(string street, string number, string? complement, string? neighborhood, string city, string state, string country)
+    public void Update(string street, string number, string? complement, string neighborhood, string city, string state, string country)
     {
         Street = street;
         Number = number;

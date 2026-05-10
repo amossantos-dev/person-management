@@ -16,9 +16,12 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token')
-      window.location.href = '/login'
-      return Promise.reject(error)
+      // Só redireciona se já havia token (sessão expirada), não na tela de login
+      if (localStorage.getItem('token')) {
+        localStorage.removeItem('token')
+        window.location.href = '/login'
+        return Promise.reject(error)
+      }
     }
 
     // Extrai mensagem legível do body de erro do backend

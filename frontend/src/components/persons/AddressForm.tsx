@@ -69,7 +69,7 @@ export function AddressForm() {
       </div>
 
       <div className="col-span-2 flex flex-col gap-1.5">
-        <Label className="text-sm">Bairro <span className="text-muted-foreground text-xs">(opcional)</span></Label>
+        <Label className="text-sm">Bairro</Label>
         <Input {...register('address.neighborhood')} placeholder="Nome do bairro" className="h-9 text-sm" />
         {ae?.neighborhood && <span className="text-xs text-destructive">{ae.neighborhood.message}</span>}
       </div>

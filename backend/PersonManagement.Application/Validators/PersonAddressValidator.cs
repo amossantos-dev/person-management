@@ -12,7 +12,7 @@ public class PersonAddressValidator : AbstractValidator<PersonAddressDto>
         RuleFor(x => x.City).NotEmpty().WithMessage("Cidade é obrigatória.");
         RuleFor(x => x.State).NotEmpty().WithMessage("Estado é obrigatório.");
         RuleFor(x => x.Country).NotEmpty().WithMessage("País é obrigatório.");
-        RuleFor(x => x.Neighborhood).MaximumLength(150).When(x => x.Neighborhood != null)
-            .WithMessage("Bairro deve ter no máximo 150 caracteres.");
+        RuleFor(x => x.Neighborhood).NotEmpty().WithMessage("Bairro é obrigatório.")
+            .MaximumLength(150).WithMessage("Bairro deve ter no máximo 150 caracteres.");
     }
 }

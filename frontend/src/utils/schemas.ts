@@ -4,7 +4,7 @@ const addressSchema = z.object({
   street: z.string().min(1, 'Rua é obrigatória'),
   number: z.string().min(1, 'Número é obrigatório'),
   complement: z.string().optional(),
-  neighborhood: z.string().optional(),
+  neighborhood: z.string().min(1, 'Bairro é obrigatório'),
   city: z.string().min(1, 'Cidade é obrigatória'),
   state: z.string().min(1, 'Estado é obrigatório'),
   country: z.string().min(1, 'País é obrigatório'),

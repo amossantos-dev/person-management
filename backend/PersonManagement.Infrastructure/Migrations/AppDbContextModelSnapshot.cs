@@ -175,6 +175,7 @@ namespace PersonManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Neighborhood")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -203,6 +204,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("a1000000-0000-0000-0000-000000000001"),
                             City = "São Paulo",
                             Country = "BR",
+                            Neighborhood = "Jardins",
                             Number = "100",
                             State = "SP",
                             Street = "Rua das Flores"
@@ -213,6 +215,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             City = "Rio de Janeiro",
                             Complement = "Apto 10",
                             Country = "BR",
+                            Neighborhood = "Copacabana",
                             Number = "200",
                             State = "RJ",
                             Street = "Av. Atlântica"
@@ -222,6 +225,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("a3000000-0000-0000-0000-000000000003"),
                             City = "Curitiba",
                             Country = "BR",
+                            Neighborhood = "Centro",
                             Number = "300",
                             State = "PR",
                             Street = "Rua XV de Novembro"
@@ -232,6 +236,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             City = "São Paulo",
                             Complement = "Cj 42",
                             Country = "BR",
+                            Neighborhood = "Bela Vista",
                             Number = "1500",
                             State = "SP",
                             Street = "Av. Paulista"
@@ -241,6 +246,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("a5000000-0000-0000-0000-000000000005"),
                             City = "Belo Horizonte",
                             Country = "BR",
+                            Neighborhood = "Savassi",
                             Number = "88",
                             State = "MG",
                             Street = "Rua da Liberdade"
@@ -250,6 +256,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("a6000000-0000-0000-0000-000000000006"),
                             City = "Salvador",
                             Country = "BR",
+                            Neighborhood = "Centro",
                             Number = "45",
                             State = "BA",
                             Street = "Rua Sete de Setembro"
@@ -260,6 +267,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             City = "Fortaleza",
                             Complement = "Sala 3",
                             Country = "BR",
+                            Neighborhood = "Aldeota",
                             Number = "210",
                             State = "CE",
                             Street = "Rua do Comércio"
@@ -269,6 +277,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("a8000000-0000-0000-0000-000000000008"),
                             City = "Manaus",
                             Country = "BR",
+                            Neighborhood = "Centro",
                             Number = "900",
                             State = "AM",
                             Street = "Av. Brasil"
@@ -278,6 +287,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("a9000000-0000-0000-0000-000000000009"),
                             City = "Porto Alegre",
                             Country = "BR",
+                            Neighborhood = "Moinhos de Vento",
                             Number = "55",
                             State = "RS",
                             Street = "Rua das Palmeiras"
@@ -287,6 +297,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("aa000000-0000-0000-0000-00000000000a"),
                             City = "Belém",
                             Country = "BR",
+                            Neighborhood = "Nazaré",
                             Number = "320",
                             State = "PA",
                             Street = "Av. Amazonas"
@@ -297,6 +308,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             City = "Recife",
                             Complement = "Apto 2",
                             Country = "BR",
+                            Neighborhood = "Boa Vista",
                             Number = "77",
                             State = "PE",
                             Street = "Rua Marechal Deodoro"
@@ -306,6 +318,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("ac000000-0000-0000-0000-00000000000c"),
                             City = "Goiânia",
                             Country = "BR",
+                            Neighborhood = "Setor Bueno",
                             Number = "14",
                             State = "GO",
                             Street = "Rua das Acácias"
@@ -315,6 +328,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("ad000000-0000-0000-0000-00000000000d"),
                             City = "Florianópolis",
                             Country = "BR",
+                            Neighborhood = "Centro",
                             Number = "500",
                             State = "SC",
                             Street = "Rua da Praia"
@@ -325,6 +339,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             City = "Brasília",
                             Complement = "Bl. B",
                             Country = "BR",
+                            Neighborhood = "Asa Sul",
                             Number = "730",
                             State = "DF",
                             Street = "Av. das Nações"
@@ -334,6 +349,7 @@ namespace PersonManagement.Infrastructure.Migrations
                             Id = new Guid("af000000-0000-0000-0000-00000000000f"),
                             City = "Natal",
                             Country = "BR",
+                            Neighborhood = "Petrópolis",
                             Number = "62",
                             State = "RN",
                             Street = "Rua Tiradentes"

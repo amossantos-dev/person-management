@@ -25,9 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PersonManagement.Application\PersonManagement.Application.csproj" />
-    <ProjectReference Include="..\..\src\PersonManagement.Domain\PersonManagement.Domain.csproj" />
-    <ProjectReference Include="..\..\src\PersonManagement.Api\PersonManagement.Api.csproj" />
+    <ProjectReference Include="..\..\backend\PersonManagement.Application\PersonManagement.Application.csproj" />
+    <ProjectReference Include="..\..\backend\PersonManagement.Domain\PersonManagement.Domain.csproj" />
+    <ProjectReference Include="..\..\backend\PersonManagement.Api\PersonManagement.Api.csproj" />
   </ItemGroup>
 
 </Project>

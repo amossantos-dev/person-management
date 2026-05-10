@@ -20,7 +20,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: src/PersonManagement.Api/Dockerfile
+      dockerfile: backend/PersonManagement.Api/Dockerfile
     ports:
       - "5045:8080"
     depends_on:
