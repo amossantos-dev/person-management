@@ -2,6 +2,7 @@ namespace PersonManagement.Application.DTOs;
 
 public class PersonAddressDto
 {
+    public string? ZipCode { get; set; }
     public string Street { get; set; } = null!;
     public string Number { get; set; } = null!;
     public string? Complement { get; set; }

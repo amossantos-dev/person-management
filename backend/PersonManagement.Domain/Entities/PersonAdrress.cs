@@ -3,6 +3,7 @@ namespace PersonManagement.Domain.Entities;
 public class PersonAddress
 {
     public Guid Id { get; private set; }
+    public string? ZipCode { get; private set; }
     public string Street { get; private set; } = null!;
     public string Number { get; private set; } = null!;
     public string? Complement { get; private set; }
@@ -13,9 +14,10 @@ public class PersonAddress
 
     protected PersonAddress() { }
 
-    public PersonAddress(string street, string number, string? complement, string neighborhood, string city, string state, string country)
+    public PersonAddress(string? zipCode, string street, string number, string? complement, string neighborhood, string city, string state, string country)
     {
         Id = Guid.NewGuid();
+        ZipCode = zipCode;
         Street = street;
         Number = number;
         Complement = complement;
@@ -25,8 +27,9 @@ public class PersonAddress
         Country = country;
     }
 
-    public void Update(string street, string number, string? complement, string neighborhood, string city, string state, string country)
+    public void Update(string? zipCode, string street, string number, string? complement, string neighborhood, string city, string state, string country)
     {
+        ZipCode = zipCode;
         Street = street;
         Number = number;
         Complement = complement;

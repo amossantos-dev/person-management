@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 const addressSchema = z.object({
+  zipCode: z.string().optional(),
   street: z.string().min(1, 'Rua é obrigatória'),
   number: z.string().min(1, 'Número é obrigatório'),
   complement: z.string().optional(),
@@ -8,6 +9,15 @@ const addressSchema = z.object({
   city: z.string().min(1, 'Cidade é obrigatória'),
   state: z.string().min(1, 'Estado é obrigatório'),
   country: z.string().min(1, 'País é obrigatório'),
+}).superRefine((val, ctx) => {
+  if (val.country === 'BR') {
+    const digits = (val.zipCode ?? '').replace(/\D/g, '')
+    if (!digits) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'CEP é obrigatório.', path: ['zipCode'] })
+    } else if (digits.length !== 8) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: 'CEP inválido. Use o formato 00000-000.', path: ['zipCode'] })
+    }
+  }
 })
 
 export const personSchema = z.object({

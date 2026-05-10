@@ -1,15 +1,12 @@
-import { useEffect, useState } from 'react'
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { toast } from 'sonner'
 import { motion } from 'framer-motion'
-import { deletePerson, getPersonById } from '@/api/persons'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { PageHeader } from '@/components/common/PageHeader'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { Person } from '@/types'
 import { formatDate } from '@/utils/date'
+import { usePersonDetail } from '@/hooks/usePersonDetail'
 
 function Prop({ label, value, index }: { label: string; value?: string; index: number }) {
   return (
@@ -25,43 +22,21 @@ function Prop({ label, value, index }: { label: string; value?: string; index: n
   )
 }
 
+const sectionVariants = {
+  hidden: { opacity: 0, rotateY: -15 },
+  visible: { opacity: 1, rotateY: 0 },
+}
+
 export function PersonDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [person, setPerson]       = useState<Person | null>(null)
-  const [loading, setLoading]     = useState(true)
-  const [confirmOpen, setConfirmOpen] = useState(false)
-  const [deleting, setDeleting]   = useState(false)
-
-  useEffect(() => {
-    if (!id) return
-    getPersonById(id)
-      .then((res) => setPerson(res.data!))
-      .catch((err: unknown) => toast.error(err instanceof Error ? err.message : 'Pessoa não encontrada.'))
-      .finally(() => setLoading(false))
-  }, [id])
-
-  async function handleDelete() {
-    if (!id) return
-    setDeleting(true)
-    try {
-      await deletePerson(id)
-      toast.success('Pessoa excluída com sucesso.')
-      navigate('/persons')
-    } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Erro ao excluir.')
-    } finally {
-      setDeleting(false)
-    }
-  }
+  const { person, loading, confirmOpen, setConfirmOpen, deleting, handleDelete } = usePersonDetail(id)
 
   if (loading) {
     return (
       <div className="flex flex-col gap-3 max-w-lg">
         <Skeleton className="h-6 w-32" />
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton key={i} className="h-4 w-full" />
-        ))}
+        {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-4 w-full" />)}
       </div>
     )
   }
@@ -75,12 +50,7 @@ export function PersonDetailPage() {
         breadcrumbs={[{ label: 'Pessoas', to: '/persons' }, { label: person.name }]}
       />
 
-      <motion.section
-        initial={{ opacity: 0, rotateY: -15 }}
-        animate={{ opacity: 1, rotateY: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0 }}
-        style={{ transformPerspective: 1000 }}
-      >
+      <motion.section variants={sectionVariants} initial="hidden" animate="visible" transition={{ duration: 0.5, ease: 'easeOut' }} style={{ transformPerspective: 1000 }}>
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Dados Pessoais</p>
         <div className="rounded border border-border px-3 glass-card" style={{ borderRadius: '12px' }}>
           <Prop label="Nome" value={person.name} index={0} />
@@ -88,21 +58,17 @@ export function PersonDetailPage() {
         </div>
       </motion.section>
 
-      <motion.section
-        initial={{ opacity: 0, rotateY: -15 }}
-        animate={{ opacity: 1, rotateY: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
-        style={{ transformPerspective: 1000 }}
-      >
+      <motion.section variants={sectionVariants} initial="hidden" animate="visible" transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }} style={{ transformPerspective: 1000 }}>
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Endereço</p>
         <div className="rounded border border-border px-3 glass-card" style={{ borderRadius: '12px' }}>
-          <Prop label="Rua" value={person.address.street} index={0} />
-          <Prop label="Número" value={person.address.number} index={1} />
-          <Prop label="Complemento" value={person.address.complement} index={2} />
-          <Prop label="Bairro" value={person.address.neighborhood} index={3} />
-          <Prop label="Cidade" value={person.address.city} index={4} />
-          <Prop label="Estado" value={person.address.state} index={5} />
-          <Prop label="País" value={person.address.country} index={6} />
+          {person.address.zipCode && <Prop label="CEP" value={person.address.zipCode} index={0} />}
+          <Prop label="Rua" value={person.address.street} index={1} />
+          <Prop label="Número" value={person.address.number} index={2} />
+          <Prop label="Complemento" value={person.address.complement} index={3} />
+          <Prop label="Bairro" value={person.address.neighborhood} index={4} />
+          <Prop label="Cidade" value={person.address.city} index={5} />
+          <Prop label="Estado" value={person.address.state} index={6} />
+          <Prop label="País" value={person.address.country} index={7} />
         </div>
       </motion.section>
 

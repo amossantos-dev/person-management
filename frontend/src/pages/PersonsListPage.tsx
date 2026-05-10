@@ -1,13 +1,13 @@
 import { Search, Trash2, UserPlus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
+import { PaginationBar } from '@/components/common/PaginationBar'
 import { PersonTable } from '@/components/persons/PersonTable'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { usePersons } from '@/hooks/usePersons'
 import { AnimatedCounter } from '@/components/animations/AnimatedCounter'
 import { TopProgressBar } from '@/components/animations/TopProgressBar'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { usePersons } from '@/hooks/usePersons'
 
 export function PersonsListPage() {
   const navigate = useNavigate()
@@ -17,15 +17,13 @@ export function PersonsListPage() {
     totalPages, totalItems,
     deleteTarget, setDeleteTarget, deleting, handleDelete,
     selected, toggleSelect, toggleSelectAll,
-    bulkConfirmOpen, setBulkConfirmOpen,
-    bulkDeleting, handleBulkDelete,
+    bulkConfirmOpen, setBulkConfirmOpen, bulkDeleting, handleBulkDelete,
   } = usePersons()
 
   return (
     <div className="flex flex-col gap-5 pb-20">
       <TopProgressBar loading={loading} />
 
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs text-muted-foreground mb-0.5">Início / Pessoas</p>
@@ -39,41 +37,21 @@ export function PersonsListPage() {
         </Button>
       </div>
 
-      {/* Toolbar */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            className="pl-9 h-9 text-sm bg-muted/40"
-            placeholder="Buscar por nome, cidade ou estado..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          <Input className="pl-9 h-9 text-sm bg-muted/40" placeholder="Buscar por nome, cidade ou estado..." value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         {selected.size > 0 && (
-          <Button
-            variant="destructive"
-            size="sm"
-            className="gap-2 shrink-0"
-            onClick={() => setBulkConfirmOpen(true)}
-            disabled={bulkDeleting}
-          >
+          <Button variant="destructive" size="sm" className="gap-2 shrink-0" onClick={() => setBulkConfirmOpen(true)} disabled={bulkDeleting}>
             <Trash2 className="h-4 w-4" />
             {bulkDeleting ? 'Excluindo...' : `Excluir (${selected.size})`}
           </Button>
         )}
       </div>
 
-      {/* Table */}
       <div className="rounded-lg border border-border overflow-hidden glass-card" style={{ borderRadius: '12px' }}>
-        <PersonTable
-          persons={persons}
-          loading={loading}
-          selected={selected}
-          onToggle={toggleSelect}
-          onToggleAll={toggleSelectAll}
-          onDeleteClick={setDeleteTarget}
-        />
+        <PersonTable persons={persons} loading={loading} selected={selected} onToggle={toggleSelect} onToggleAll={toggleSelectAll} onDeleteClick={setDeleteTarget} />
       </div>
 
       <ConfirmDialog
@@ -96,45 +74,15 @@ export function PersonsListPage() {
         holdToDelete
       />
 
-      {/* Pagination */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-30 border-t border-border"
-        style={{
-          background: 'rgba(8, 8, 15, 0.85)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 h-13 flex items-center justify-between gap-4" style={{ height: '52px' }}>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <span className="hidden sm:inline">Por página:</span>
-            <Select value={String(pageSize)} onValueChange={(v) => setPageSize(Number(v))}>
-              <SelectTrigger className="h-8 w-16 text-sm border-border bg-transparent">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {[5, 10, 20, 50].map((n) => (
-                  <SelectItem key={n} value={String(n)} className="text-sm">{n}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <span>
-              <strong className="text-foreground">{totalItems}</strong> itens
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">{page} / {totalPages}</span>
-            <div className="flex gap-1.5">
-              <Button variant="outline" size="sm" className="h-8 px-3 text-sm border-border" onClick={() => setPage(page - 1)} disabled={page === 1 || loading}>
-                ← Anterior
-              </Button>
-              <Button variant="outline" size="sm" className="h-8 px-3 text-sm border-border" onClick={() => setPage(page + 1)} disabled={page === totalPages || loading || totalPages === 0}>
-                Próximo →
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PaginationBar
+        page={page}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        pageSize={pageSize}
+        loading={loading}
+        onPageChange={setPage}
+        onPageSizeChange={setPageSize}
+      />
     </div>
   )
 }

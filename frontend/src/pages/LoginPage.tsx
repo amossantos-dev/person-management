@@ -1,82 +1,39 @@
-import { useEffect, useRef, useState } from 'react'
 import { Loader2 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-import { motion, useAnimation } from 'framer-motion'
-import { login } from '@/api/persons'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ParticlesBackground } from '@/components/animations/ParticlesBackground'
+import { useLoginForm } from '@/hooks/useLoginForm'
+
+function inputStyle(focused: boolean) {
+  return {
+    borderColor: focused ? 'rgba(124,58,237,0.8)' : 'rgba(255,255,255,0.1)',
+    transition: 'border-color 0.2s ease',
+    boxShadow: focused ? '0 0 0 1px rgba(124,58,237,0.3)' : 'none',
+  }
+}
+
+function labelStyle(focused: boolean, hasValue: boolean) {
+  return {
+    transform: focused || hasValue ? 'translateY(-2px)' : 'none',
+    color: focused ? 'rgba(124,58,237,0.9)' : undefined,
+    transition: 'all 0.2s ease',
+  }
+}
 
 export function LoginPage() {
-  const navigate = useNavigate()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<{ username?: string; password?: string }>({})
-  const [loading, setLoading] = useState(false)
-  const [errorBorder, setErrorBorder] = useState(false)
-  const [focusedField, setFocusedField] = useState<string | null>(null)
-  const controls = useAnimation()
-  const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  useEffect(() => {
-    controls.start({ opacity: 1, scale: 1, filter: 'blur(0px)' })
-    return () => {
-      if (errorTimerRef.current) clearTimeout(errorTimerRef.current)
-    }
-  }, [controls])
-
-  function validate() {
-    const e: typeof errors = {}
-    if (!username.trim()) e.username = 'Usuário é obrigatório'
-    if (!password.trim()) e.password = 'Senha é obrigatória'
-    setErrors(e)
-    return Object.keys(e).length === 0
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!validate()) return
-    setLoading(true)
-    try {
-      const res = await login({ username, password })
-      localStorage.setItem('token', res.data!.token)
-      await controls.start({
-        opacity: 0,
-        scale: 1.05,
-        filter: 'blur(8px)',
-        transition: { duration: 0.3 },
-      })
-      await new Promise((r) => setTimeout(r, 100))
-      navigate('/persons')
-    } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Credenciais inválidas.')
-      setErrorBorder(true)
-      await controls.start({
-        x: [0, -10, 10, -10, 10, 0],
-        transition: { duration: 0.4 },
-      })
-      if (errorTimerRef.current) clearTimeout(errorTimerRef.current)
-      errorTimerRef.current = setTimeout(() => setErrorBorder(false), 2000)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { username, setUsername, password, setPassword, errors, loading, errorBorder, focusedField, setFocusedField, controls, handleSubmit } = useLoginForm()
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <ParticlesBackground />
-
       <motion.div
         animate={controls}
         initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
         className="w-full max-w-sm relative z-10 glass-card p-8"
-        style={{
-          borderColor: errorBorder ? 'rgba(239,68,68,0.6)' : undefined,
-          transition: 'border-color 0.3s ease',
-        }}
+        style={{ borderColor: errorBorder ? 'rgba(239,68,68,0.6)' : undefined, transition: 'border-color 0.3s ease' }}
       >
         <div className="mb-7 text-center">
           <h1 className="text-xl font-semibold text-foreground">Entrar</h1>
@@ -85,13 +42,7 @@ export function LoginPage() {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="username" className="text-sm"
-              style={{
-                transform: focusedField === 'username' || username ? 'translateY(-2px)' : 'none',
-                color: focusedField === 'username' ? 'rgba(124,58,237,0.9)' : undefined,
-                transition: 'all 0.2s ease',
-              }}
-            >
+            <Label htmlFor="username" className="text-sm" style={labelStyle(focusedField === 'username', !!username)}>
               Usuário
             </Label>
             <Input
@@ -103,25 +54,13 @@ export function LoginPage() {
               autoComplete="username"
               placeholder="admin"
               className="h-9 text-sm"
-              style={{
-                borderColor: focusedField === 'username'
-                  ? 'rgba(124,58,237,0.8)'
-                  : 'rgba(255,255,255,0.1)',
-                transition: 'border-color 0.2s ease',
-                boxShadow: focusedField === 'username' ? '0 0 0 1px rgba(124,58,237,0.3)' : 'none',
-              }}
+              style={inputStyle(focusedField === 'username')}
             />
             {errors.username && <span className="text-xs text-destructive">{errors.username}</span>}
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="password" className="text-sm"
-              style={{
-                transform: focusedField === 'password' || password ? 'translateY(-2px)' : 'none',
-                color: focusedField === 'password' ? 'rgba(124,58,237,0.9)' : undefined,
-                transition: 'all 0.2s ease',
-              }}
-            >
+            <Label htmlFor="password" className="text-sm" style={labelStyle(focusedField === 'password', !!password)}>
               Senha
             </Label>
             <Input
@@ -134,13 +73,7 @@ export function LoginPage() {
               autoComplete="current-password"
               placeholder="••••••"
               className="h-9 text-sm"
-              style={{
-                borderColor: focusedField === 'password'
-                  ? 'rgba(124,58,237,0.8)'
-                  : 'rgba(255,255,255,0.1)',
-                transition: 'border-color 0.2s ease',
-                boxShadow: focusedField === 'password' ? '0 0 0 1px rgba(124,58,237,0.3)' : 'none',
-              }}
+              style={inputStyle(focusedField === 'password')}
             />
             {errors.password && <span className="text-xs text-destructive">{errors.password}</span>}
           </div>

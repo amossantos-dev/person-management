@@ -14,5 +14,11 @@ public class PersonAddressValidator : AbstractValidator<PersonAddressDto>
         RuleFor(x => x.Country).NotEmpty().WithMessage("País é obrigatório.");
         RuleFor(x => x.Neighborhood).NotEmpty().WithMessage("Bairro é obrigatório.")
             .MaximumLength(150).WithMessage("Bairro deve ter no máximo 150 caracteres.");
+        When(x => x.Country == "BR", () =>
+        {
+            RuleFor(x => x.ZipCode)
+                .NotEmpty().WithMessage("CEP é obrigatório.")
+                .Matches(@"^\d{5}-?\d{3}$").WithMessage("CEP inválido. Use o formato 00000-000.");
+        });
     }
 }

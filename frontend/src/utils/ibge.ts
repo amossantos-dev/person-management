@@ -37,3 +37,5 @@ export function getAllCountries() {
     .map(([code, name]) => ({ value: code, label: name }))
     .sort((a, b) => a.label.localeCompare(b.label, 'pt-BR'))
 }
+
+export const COUNTRIES = getAllCountries()

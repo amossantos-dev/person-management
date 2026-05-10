@@ -1,4 +1,5 @@
 export interface PersonAddress {
+  zipCode?: string
   street: string
   number: string
   complement?: string

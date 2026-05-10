@@ -1,58 +1,40 @@
-import { useEffect, useState } from 'react'
 import { useFormContext, Controller } from 'react-hook-form'
 import { Combobox } from '@/components/common/Combobox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { fetchCities, fetchStates, getAllCountries } from '@/utils/ibge'
+import { COUNTRIES } from '@/utils/ibge'
+import { useAddressForm } from '@/hooks/useAddressForm'
 import type { PersonFormValues } from '@/utils/schemas'
 
-const countries = getAllCountries()
-
 export function AddressForm() {
-  const { register, control, watch, setValue, formState: { errors } } = useFormContext<PersonFormValues>()
+  const { register, control, formState: { errors } } = useFormContext<PersonFormValues>()
+  const {
+    isBrazil, state,
+    states, cities,
+    loadingStates, loadingCities, loadingCep,
+    handleCepChange, handleCountryChange, handleStateChange, handleCityChange,
+  } = useAddressForm()
 
-  const country  = watch('address.country')
-  const state    = watch('address.state')
-  const isBrazil = country === 'BR'
-
-  const [states, setStates]           = useState<{ value: string; label: string }[]>([])
-  const [cities, setCities]           = useState<{ value: string; label: string }[]>([])
-  const [loadingStates, setLoadingStates] = useState(false)
-  const [loadingCities, setLoadingCities] = useState(false)
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (!isBrazil) { setStates([]); setCities([]); return }
-    setLoadingStates(true)
-    fetchStates()
-      .then((data) => setStates(data.map((s) => ({ value: s.sigla, label: s.nome }))))
-      .finally(() => setLoadingStates(false))
-  }, [isBrazil])
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (!isBrazil || !state) { setCities([]); return }
-    setLoadingCities(true)
-    fetchCities(state)
-      .then((data) => setCities(data.map((c) => ({ value: c, label: c }))))
-      .finally(() => setLoadingCities(false))
-  }, [isBrazil, state])
-
-  function handleCountryChange(value: string) {
-    setValue('address.country', value, { shouldValidate: false })
-    setValue('address.state',   '',    { shouldValidate: false })
-    setValue('address.city',    '',    { shouldValidate: false })
-  }
-
-  function handleStateChange(value: string) {
-    setValue('address.state', value, { shouldValidate: false })
-    setValue('address.city',  '',   { shouldValidate: false })
-  }
-
-  const ae = errors.address
+  const ae = errors.address as Record<string, { message?: string }> | undefined
 
   return (
     <div className="grid grid-cols-2 gap-4">
+      <div className="col-span-2 flex flex-col gap-1.5">
+        <Label className="text-sm">
+          CEP
+          {isBrazil ? <span className="text-destructive ml-0.5">*</span> : <span className="text-muted-foreground text-xs ml-1">(opcional)</span>}
+          {loadingCep && <span className="text-muted-foreground text-xs ml-2">Buscando...</span>}
+        </Label>
+        <Input
+          {...register('address.zipCode')}
+          placeholder="00000-000"
+          className="h-9 text-sm"
+          maxLength={9}
+          onChange={(e) => handleCepChange(e.target.value)}
+        />
+        {ae?.zipCode && <span className="text-xs text-destructive">{ae.zipCode.message}</span>}
+      </div>
+
       <div className="col-span-2 flex flex-col gap-1.5">
         <Label className="text-sm">Rua</Label>
         <Input {...register('address.street')} placeholder="Nome da rua" className="h-9 text-sm" />
@@ -82,14 +64,7 @@ export function AddressForm() {
           name="address.country"
           control={control}
           render={({ field }) => (
-            <Combobox
-              options={countries}
-              value={field.value}
-              onChange={handleCountryChange}
-              placeholder="Selecione um país"
-              searchPlaceholder="Buscar país..."
-              emptyText="País não encontrado."
-            />
+            <Combobox options={COUNTRIES} value={field.value} onChange={handleCountryChange} placeholder="Selecione um país" searchPlaceholder="Buscar país..." emptyText="País não encontrado." />
           )}
         />
         {ae?.country && <span className="text-xs text-destructive">{ae.country.message}</span>}
@@ -102,19 +77,11 @@ export function AddressForm() {
             name="address.state"
             control={control}
             render={({ field }) => (
-              <Combobox
-                options={states}
-                value={field.value}
-                onChange={handleStateChange}
-                placeholder={loadingStates ? 'Carregando...' : 'Selecione'}
-                searchPlaceholder="Buscar estado..."
-                emptyText="Estado não encontrado."
-                disabled={!country || loadingStates}
-              />
+              <Combobox options={states} value={field.value} onChange={handleStateChange} placeholder={loadingStates ? 'Carregando...' : 'Selecione'} searchPlaceholder="Buscar estado..." emptyText="Estado não encontrado." disabled={loadingStates} />
             )}
           />
         ) : (
-          <Input {...register('address.state')} placeholder="Estado" className="h-9 text-sm" disabled={!country} />
+          <Input {...register('address.state')} placeholder="Estado" className="h-9 text-sm" />
         )}
         {ae?.state && <span className="text-xs text-destructive">{ae.state.message}</span>}
       </div>
@@ -126,19 +93,11 @@ export function AddressForm() {
             name="address.city"
             control={control}
             render={({ field }) => (
-              <Combobox
-                options={cities}
-                value={field.value}
-                onChange={(v) => setValue('address.city', v, { shouldValidate: false })}
-                placeholder={loadingCities ? 'Carregando...' : 'Selecione'}
-                searchPlaceholder="Buscar cidade..."
-                emptyText="Cidade não encontrada."
-                disabled={!state || loadingCities}
-              />
+              <Combobox options={cities} value={field.value} onChange={handleCityChange} placeholder={loadingCities ? 'Carregando...' : 'Selecione'} searchPlaceholder="Buscar cidade..." emptyText="Cidade não encontrada." disabled={!state || loadingCities} />
             )}
           />
         ) : (
-          <Input {...register('address.city')} placeholder="Cidade" className="h-9 text-sm" disabled={!country} />
+          <Input {...register('address.city')} placeholder="Cidade" className="h-9 text-sm" />
         )}
         {ae?.city && <span className="text-xs text-destructive">{ae.city.message}</span>}
       </div>

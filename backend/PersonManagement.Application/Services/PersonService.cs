@@ -39,6 +39,7 @@ public class PersonService : IPersonService
             return ApiResponseDto<PersonResponseDto>.Fail(validation.Errors.Select(e => e.ErrorMessage));
 
         var address = new PersonAddress(
+            dto.Address.ZipCode,
             dto.Address.Street,
             dto.Address.Number,
             dto.Address.Complement,
@@ -70,6 +71,7 @@ public class PersonService : IPersonService
 
         person.Update(dto.Name, dto.DateOfBirth);
         person.Address.Update(
+            dto.Address.ZipCode,
             dto.Address.Street,
             dto.Address.Number,
             dto.Address.Complement,
