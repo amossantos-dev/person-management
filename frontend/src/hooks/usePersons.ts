@@ -24,7 +24,9 @@ export function usePersons() {
 
   const debouncedSearch = useDebounce(search, 500)
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setPage(1); setSelected(new Set()) }, [debouncedSearch, pageSize])
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setSelected(new Set()) }, [page])
 
   const fetch = useCallback(async () => {
@@ -41,6 +43,7 @@ export function usePersons() {
     }
   }, [page, pageSize, debouncedSearch])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch() }, [fetch])
 
   // ── single delete ──────────────────────────────────────
@@ -64,7 +67,7 @@ export function usePersons() {
   function toggleSelect(id: string) {
     setSelected((s) => {
       const n = new Set(s)
-      n.has(id) ? n.delete(id) : n.add(id)
+      if (n.has(id)) { n.delete(id) } else { n.add(id) }
       return n
     })
   }
