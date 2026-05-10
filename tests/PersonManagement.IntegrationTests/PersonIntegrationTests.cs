@@ -26,6 +26,7 @@ public class PersonsIntegrationTests : IClassFixture<CustomWebApplicationFactory
         {
             Street = "Rua Integração",
             Number = "100",
+            Neighborhood = "Centro",
             City = "São Paulo",
             State = "SP",
             Country = "Brazil"
@@ -139,6 +140,7 @@ public class PersonsIntegrationTests : IClassFixture<CustomWebApplicationFactory
             {
                 Street = "Rua Nova",
                 Number = "999",
+                Neighborhood = "Centro",
                 City = "Curitiba",
                 State = "PR",
                 Country = "Brazil"

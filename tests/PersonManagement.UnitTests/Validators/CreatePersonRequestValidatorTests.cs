@@ -12,6 +12,7 @@ public class CreatePersonRequestValidatorTests
     {
         Street = "Rua Teste",
         Number = "123",
+        Neighborhood = "Centro",
         City = "São Paulo",
         State = "SP",
         Country = "Brazil"

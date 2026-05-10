@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using PersonManagement.Application.DTOs;
@@ -12,15 +13,21 @@ namespace PersonManagement.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
+    private readonly IValidator<LoginRequestDto> _validator;
 
-    public AuthController(IConfiguration configuration)
+    public AuthController(IConfiguration configuration, IValidator<LoginRequestDto> validator)
     {
         _configuration = configuration;
+        _validator = validator;
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequestDto dto)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
     {
+        var validation = await _validator.ValidateAsync(dto);
+        if (!validation.IsValid)
+            return BadRequest(ApiResponseDto<object>.Fail(validation.Errors.Select(e => e.ErrorMessage)));
+
         if (dto.Username != "admin" || dto.Password != "admin")
             return Unauthorized(ApiResponseDto<object>.Fail("Credenciais inválidas."));
 

@@ -36,6 +36,7 @@ public class PersonServiceTests
         {
             Street = "Rua Teste",
             Number = "123",
+            Neighborhood = "Centro",
             City = "São Paulo",
             State = "SP",
             Country = "Brazil"
@@ -153,6 +154,7 @@ public class PersonServiceTests
             {
                 Street = "Rua Nova",
                 Number = "456",
+                Neighborhood = "Centro",
                 City = "Rio",
                 State = "RJ",
                 Country = "Brazil"
