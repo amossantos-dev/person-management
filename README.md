@@ -86,13 +86,14 @@ Com o token configurado, você pode testar qualquer endpoint. Exemplos rápidos:
   "name": "João Silva",
   "dateOfBirth": "1990-05-15",
   "address": {
+    "zipCode": "01310-100",
     "street": "Rua das Flores",
     "number": "123",
     "complement": "Apto 4",
     "neighborhood": "Centro",
     "city": "São Paulo",
     "state": "SP",
-    "country": "Brasil"
+    "country": "BR"
   }
 }
 ```
