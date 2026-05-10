@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { usePersons } from '@/hooks/usePersons'
+import { AnimatedCounter } from '@/components/animations/AnimatedCounter'
+import { TopProgressBar } from '@/components/animations/TopProgressBar'
 
 export function PersonsListPage() {
   const navigate = useNavigate()
@@ -21,11 +23,15 @@ export function PersonsListPage() {
 
   return (
     <div className="flex flex-col gap-5 pb-20">
+      <TopProgressBar loading={loading} />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs text-muted-foreground mb-0.5">Início / Pessoas</p>
-          <h1 className="text-2xl font-semibold text-foreground">Pessoas</h1>
+          <h1 className="text-2xl font-semibold text-foreground">
+            <AnimatedCounter value={totalItems} suffix=" pessoas encontradas" />
+          </h1>
         </div>
         <Button size="sm" onClick={() => navigate('/persons/new')} className="gap-2">
           <UserPlus className="h-4 w-4" />
@@ -59,7 +65,7 @@ export function PersonsListPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border border-border overflow-hidden">
+      <div className="rounded-lg border border-border overflow-hidden glass-card" style={{ borderRadius: '12px' }}>
         <PersonTable
           persons={persons}
           loading={loading}
@@ -77,6 +83,7 @@ export function PersonsListPage() {
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
         loading={deleting}
+        holdToDelete
       />
 
       <ConfirmDialog
@@ -86,10 +93,18 @@ export function PersonsListPage() {
         onConfirm={handleBulkDelete}
         onCancel={() => setBulkConfirmOpen(false)}
         loading={bulkDeleting}
+        holdToDelete
       />
 
       {/* Pagination */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-background/95 backdrop-blur">
+      <div
+        className="fixed bottom-0 left-0 right-0 z-30 border-t border-border"
+        style={{
+          background: 'rgba(8, 8, 15, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+        }}
+      >
         <div className="max-w-5xl mx-auto px-6 h-13 flex items-center justify-between gap-4" style={{ height: '52px' }}>
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="hidden sm:inline">Por página:</span>

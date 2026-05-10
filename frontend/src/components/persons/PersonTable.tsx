@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { Eye, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import type { Person } from '@/types'
 import { formatDate } from '@/utils/date'
@@ -17,21 +17,36 @@ interface PersonTableProps {
   onDeleteClick: (person: Person) => void
 }
 
+function ShimmerCell() {
+  return (
+    <TableCell className="py-3">
+      <div
+        className="h-4 w-full rounded"
+        style={{
+          background: 'linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%)',
+          backgroundSize: '200% 100%',
+          animation: 'shimmer 1.5s infinite linear',
+        }}
+      />
+    </TableCell>
+  )
+}
+
 function SkeletonRows() {
   return (
     <>
       {Array.from({ length: 5 }).map((_, i) => (
         <TableRow key={i}>
           {Array.from({ length: 7 }).map((_, j) => (
-            <TableCell key={j} className="py-3">
-              <Skeleton className="h-4 w-full" />
-            </TableCell>
+            <ShimmerCell key={j} />
           ))}
         </TableRow>
       ))}
     </>
   )
 }
+
+const MotionTableRow = motion(TableRow)
 
 export function PersonTable({ persons, loading, selected, onToggle, onToggleAll, onDeleteClick }: PersonTableProps) {
   const navigate = useNavigate()
@@ -67,12 +82,23 @@ export function PersonTable({ persons, loading, selected, onToggle, onToggleAll,
             </TableCell>
           </TableRow>
         ) : (
-          persons.map((p) => (
-            <TableRow
+          persons.map((p, index) => (
+            <MotionTableRow
               key={p.id}
               className="cursor-pointer"
               data-state={selected.has(p.id) ? 'selected' : undefined}
               onClick={() => navigate(`/persons/${p.id}`)}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.3 }}
+              whileHover={{ backgroundColor: 'rgba(124,58,237,0.08)' } as never}
+              style={{ borderLeft: '2px solid transparent', transition: 'border-left-color 0.2s ease' } as never}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderLeftColor = 'rgba(124,58,237,0.8)'
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderLeftColor = 'transparent'
+              }}
             >
               <TableCell className="py-2.5" onClick={(e) => e.stopPropagation()}>
                 <Checkbox
@@ -113,7 +139,7 @@ export function PersonTable({ persons, loading, selected, onToggle, onToggleAll,
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
-            </TableRow>
+            </MotionTableRow>
           ))
         )}
       </TableBody>

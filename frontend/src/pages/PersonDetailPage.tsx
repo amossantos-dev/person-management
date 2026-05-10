@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
+import { motion } from 'framer-motion'
 import { deletePerson, getPersonById } from '@/api/persons'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { PageHeader } from '@/components/common/PageHeader'
@@ -10,12 +11,17 @@ import { Skeleton } from '@/components/ui/skeleton'
 import type { Person } from '@/types'
 import { formatDate } from '@/utils/date'
 
-function Prop({ label, value }: { label: string; value?: string }) {
+function Prop({ label, value, index }: { label: string; value?: string; index: number }) {
   return (
-    <div className="flex items-start gap-0 py-1.5 border-b border-border last:border-0">
+    <motion.div
+      className="flex items-start gap-0 py-1.5 border-b border-border last:border-0"
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.05, duration: 0.3 }}
+    >
       <span className="text-xs text-muted-foreground w-36 shrink-0 pt-px">{label}</span>
       <span className="text-sm text-foreground">{value || '—'}</span>
-    </div>
+    </motion.div>
   )
 }
 
@@ -69,26 +75,36 @@ export function PersonDetailPage() {
         breadcrumbs={[{ label: 'Pessoas', to: '/persons' }, { label: person.name }]}
       />
 
-      <section>
+      <motion.section
+        initial={{ opacity: 0, rotateY: -15 }}
+        animate={{ opacity: 1, rotateY: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut', delay: 0 }}
+        style={{ transformPerspective: 1000 }}
+      >
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Dados Pessoais</p>
-        <div className="rounded border border-border px-3">
-          <Prop label="Nome" value={person.name} />
-          <Prop label="Data de Nascimento" value={formatDate(person.dateOfBirth)} />
+        <div className="rounded border border-border px-3 glass-card" style={{ borderRadius: '12px' }}>
+          <Prop label="Nome" value={person.name} index={0} />
+          <Prop label="Data de Nascimento" value={formatDate(person.dateOfBirth)} index={1} />
         </div>
-      </section>
+      </motion.section>
 
-      <section>
+      <motion.section
+        initial={{ opacity: 0, rotateY: -15 }}
+        animate={{ opacity: 1, rotateY: 0 }}
+        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
+        style={{ transformPerspective: 1000 }}
+      >
         <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-2">Endereço</p>
-        <div className="rounded border border-border px-3">
-          <Prop label="Rua" value={person.address.street} />
-          <Prop label="Número" value={person.address.number} />
-          <Prop label="Complemento" value={person.address.complement} />
-          <Prop label="Bairro" value={person.address.neighborhood} />
-          <Prop label="Cidade" value={person.address.city} />
-          <Prop label="Estado" value={person.address.state} />
-          <Prop label="País" value={person.address.country} />
+        <div className="rounded border border-border px-3 glass-card" style={{ borderRadius: '12px' }}>
+          <Prop label="Rua" value={person.address.street} index={0} />
+          <Prop label="Número" value={person.address.number} index={1} />
+          <Prop label="Complemento" value={person.address.complement} index={2} />
+          <Prop label="Bairro" value={person.address.neighborhood} index={3} />
+          <Prop label="Cidade" value={person.address.city} index={4} />
+          <Prop label="Estado" value={person.address.state} index={5} />
+          <Prop label="País" value={person.address.country} index={6} />
         </div>
-      </section>
+      </motion.section>
 
       <div className="flex items-center justify-between pt-1">
         <Button variant="ghost" size="sm" onClick={() => navigate('/persons')} className="gap-1.5 h-7 text-xs px-3 text-muted-foreground">
@@ -114,6 +130,7 @@ export function PersonDetailPage() {
         onConfirm={handleDelete}
         onCancel={() => setConfirmOpen(false)}
         loading={deleting}
+        holdToDelete
       />
     </div>
   )
