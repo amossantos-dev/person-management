@@ -11,7 +11,7 @@ Aplicação full-stack para gerenciamento de pessoas e endereços, construída c
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/amos-macedo/person-management.git
+git clone https://github.com/amossantos-dev/person-management.git
 cd person-management
 ```
 
